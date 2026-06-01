@@ -1,0 +1,1418 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl" class="dark">
+<head>
+   <meta name="google-site-verification" content="tK88fYylRc9CJSxDAX69J4CPYTHftlBQQl4-8eJUvQs" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Q Tech Hub | اردو میں جدید ڈیجیٹل اسکلز سیکھیں</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        // Tailwind ki configuration
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'urdu': ['"Noto Nastaliq Urdu"', 'serif'],
+                        'english': ['"Poppins"', 'sans-serif'],
+                    },
+                    colors: {
+                        primary: '#3b82f6',
+                        secondary: '#8b5cf6',
+                        dark: '#0f172a',
+                        light: '#f8fafc'
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Styles & Glassmorphism Design */
+        body {
+            transition: background-color 0.3s, color 0.3s;
+            overflow-x: hidden;
+        }
+        
+        .bg-gradient-dark {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+        }
+        
+        .bg-gradient-light {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0e7ff 100%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .dark .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .dark .glass-nav {
+            background: rgba(15, 23, 42, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
+        .slide-up { animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography & Layout */
+        .urdu-text { font-family: 'Noto Nastaliq Urdu', serif; line-height: 2.2; }
+        .en-text { font-family: 'Poppins', sans-serif; line-height: 1.6; }
+        
+        .hide { display: none !important; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .dark ::-webkit-scrollbar-thumb { background: #475569; }
+
+        /* Loader */
+        .loader {
+            border: 4px solid rgba(255,255,255,0.1);
+            border-left-color: #3b82f6;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-gradient-dark text-slate-800 dark:text-slate-100 min-h-screen urdu-text flex flex-col">
+
+    <!-- Language & Theme Switcher -->
+    <div class="fixed top-4 left-4 z-50 flex gap-2">
+        <button id="themeToggle" class="glass-card p-3 rounded-full hover:bg-white/20 transition flex items-center justify-center w-12 h-12">
+            <i class="fas fa-moon text-xl" id="themeIcon"></i>
+        </button>
+        <button id="langToggleEn" class="glass-card px-4 py-2 rounded-full hover:bg-white/20 transition font-english font-semibold text-sm hide">
+            English
+        </button>
+        <button id="langToggleUr" class="glass-card px-4 py-2 rounded-full hover:bg-white/20 transition font-urdu text-sm">
+            اردو
+        </button>
+    </div>
+
+    <!-- Toast Notification (Alerts ke liye) -->
+    <div id="toast" class="fixed top-4 right-4 z-50 glass-card px-6 py-3 rounded-xl shadow-2xl transform transition-transform translate-x-full opacity-0 flex items-center gap-3">
+        <i class="fas fa-info-circle text-primary"></i>
+        <span id="toastMsg" class="font-medium"></span>
+    </div>
+
+    <!-- 1. SPLASH SCREEN -->
+    <div id="splashScreen" class="fixed inset-0 z-40 flex flex-col items-center justify-center bg-gradient-dark text-white fade-in">
+        <div class="w-32 h-32 rounded-3xl glass-card flex items-center justify-center mb-6 slide-up">
+            <i class="fas fa-graduation-cap text-6xl text-blue-400"></i>
+        </div>
+        <h1 class="text-4xl font-bold mb-2 slide-up" style="animation-delay: 0.1s;">Q Tech Hub</h1>
+        <p class="text-lg opacity-80 slide-up" style="animation-delay: 0.2s;" data-ur="اردو میں جدید ڈیجیٹل اسکلز سیکھیں" data-en="Learn Modern Digital Skills in Urdu">اردو میں جدید ڈیجیٹل اسکلز سیکھیں</p>
+        <div class="mt-12 loader slide-up" style="animation-delay: 0.3s;"></div>
+    </div>
+
+    <!-- 2. AUTH SCREEN (Login/Signup) -->
+    <div id="authScreen" class="flex-1 flex items-center justify-center p-4 hide">
+        <div class="glass-card w-full max-w-md p-8 rounded-3xl slide-up relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-32 h-32 bg-blue-500 rounded-full blur-3xl opacity-20 -mr-10 -mt-10"></div>
+            
+            <div class="text-center mb-8">
+                <i class="fas fa-user-circle text-5xl text-primary mb-4"></i>
+                <h2 id="authTitle" class="text-2xl font-bold" data-ur="لاگ ان کریں" data-en="Login">لاگ ان کریں</h2>
+                <p id="authSubtitle" class="text-sm opacity-70 mt-1" data-ur="خوش آمدید! اپنی معلومات درج کریں۔" data-en="Welcome back! Please enter your details.">خوش آمدید! اپنی معلومات درج کریں۔</p>
+            </div>
+
+            <form id="authForm" class="space-y-5">
+                <div id="nameField" class="hide">
+                    <label class="block text-sm mb-1" data-ur="پورا نام" data-en="Full Name">پورا نام</label>
+                    <div class="relative">
+                        <i class="fas fa-user absolute right-4 top-1/2 -translate-y-1/2 opacity-50 ltr-icon"></i>
+                        <input type="text" id="authName" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none focus:border-primary transition rtl:pr-10 ltr:pl-10" placeholder="Ali Raza">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm mb-1" data-ur="ای میل" data-en="Email Address">ای میل</label>
+                    <div class="relative">
+                        <i class="fas fa-envelope absolute right-4 top-1/2 -translate-y-1/2 opacity-50 ltr-icon"></i>
+                        <input type="email" id="authEmail" required class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none focus:border-primary transition rtl:pr-10 ltr:pl-10" placeholder="user@example.com">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm mb-1" data-ur="پاس ورڈ" data-en="Password">پاس ورڈ</label>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute right-4 top-1/2 -translate-y-1/2 opacity-50 ltr-icon"></i>
+                        <input type="password" id="authPassword" required class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 outline-none focus:border-primary transition rtl:pr-10 ltr:pl-10" placeholder="••••••••">
+                    </div>
+                </div>
+                
+                <button type="submit" id="authSubmitBtn" class="w-full bg-primary hover:bg-blue-600 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-blue-500/30 flex justify-center items-center gap-2">
+                    <span data-ur="لاگ ان" data-en="Login">لاگ ان</span>
+                    <i class="fas fa-arrow-right rtl:rotate-180"></i>
+                </button>
+            </form>
+
+            <div class="mt-6 text-center text-sm">
+                <span class="opacity-70" id="authSwitchText" data-ur="اکاؤنٹ نہیں ہے؟" data-en="Don't have an account?">اکاؤنٹ نہیں ہے؟</span>
+                <button id="authSwitchBtn" class="text-primary font-bold hover:underline ml-1">
+                    <span data-ur="سائن اپ کریں" data-en="Sign Up">سائن اپ کریں</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div id="mainApp" class="flex-1 flex flex-col hide">
+        
+        <!-- Navbar -->
+        <nav class="glass-nav sticky top-0 z-30 px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary text-white flex items-center justify-center font-bold text-xl shadow-lg">Q</div>
+                <h1 class="text-xl font-bold hidden sm:block">Q Tech Hub</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="text-right hidden sm:block">
+                    <p id="navUserName" class="text-sm font-bold">User</p>
+                    <p class="text-xs opacity-70" data-ur="طالب علم" data-en="Student">طالب علم</p>
+                </div>
+                <button onclick="navigate('profile')" class="w-10 h-10 rounded-full glass-card flex items-center justify-center hover:bg-white/20 transition">
+                    <i class="fas fa-user"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 w-full max-w-6xl mx-auto p-4 pb-24 lg:pb-8 relative">
+            
+            <!-- DASHBOARD SCREEN -->
+            <div id="dashboardScreen" class="screen-view space-y-6">
+                <!-- Welcome Card -->
+                <div class="glass-card p-6 md:p-8 rounded-3xl relative overflow-hidden bg-gradient-to-r from-blue-600/20 to-purple-600/20">
+                    <div class="relative z-10 md:w-2/3">
+                        <h2 class="text-2xl md:text-3xl font-bold mb-2" id="dashWelcome" data-ur="خوش آمدید، " data-en="Welcome, ">خوش آمدید، </h2>
+                        <p class="opacity-80 mb-6" data-ur="آج آپ کیا سیکھنا چاہیں گے؟" data-en="What would you like to learn today?">آج آپ کیا سیکھنا چاہیں گے؟</p>
+                        
+                        <div class="flex flex-wrap gap-4">
+                            <div class="glass-card px-4 py-3 rounded-xl flex items-center gap-3">
+                                <i class="fas fa-book-open text-primary text-xl"></i>
+                                <div>
+                                    <p class="text-xs opacity-70" data-ur="مکمل کورسز" data-en="Completed Courses">مکمل کورسز</p>
+                                    <p id="dashCompletedCount" class="font-bold text-lg">0</p>
+                                </div>
+                            </div>
+                            <div class="glass-card px-4 py-3 rounded-xl flex items-center gap-3">
+                                <i class="fas fa-star text-yellow-500 text-xl"></i>
+                                <div>
+                                    <p class="text-xs opacity-70" data-ur="اوسط اسکور" data-en="Average Score">اوسط اسکور</p>
+                                    <p id="dashAvgScore" class="font-bold text-lg">0%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <i class="fas fa-laptop-code absolute -bottom-4 -left-4 text-[150px] opacity-10 ltr:right-[-10px] ltr:left-auto"></i>
+                </div>
+
+                <!-- Categories / Courses Grid -->
+                <div>
+                    <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                        <i class="fas fa-layer-group text-primary"></i>
+                        <span data-ur="دستیاب کورسز" data-en="Available Courses">دستیاب کورسز</span>
+                    </h3>
+                    <div id="courseGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- COURSE VIEWER SCREEN -->
+            <div id="courseScreen" class="screen-view hide space-y-6">
+                <button onclick="navigate('dashboard')" class="glass-card px-4 py-2 rounded-xl hover:bg-white/10 transition flex items-center gap-2 w-max">
+                    <i class="fas fa-arrow-right rtl:rotate-180"></i>
+                    <span data-ur="واپس ڈیش بورڈ" data-en="Back to Dashboard">واپس ڈیش بورڈ</span>
+                </button>
+
+                <div class="glass-card p-6 md:p-8 rounded-3xl relative overflow-hidden">
+                    <div class="flex items-start gap-4">
+                        <div id="courseIconLg" class="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center text-3xl text-primary shrink-0"></div>
+                        <div>
+                            <h2 id="courseTitle" class="text-2xl md:text-3xl font-bold mb-2">Course Title</h2>
+                            <p id="courseDesc" class="opacity-70 text-sm md:text-base">Course description goes here.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 flex items-center gap-2">
+                        <div class="h-2 flex-1 bg-white/10 rounded-full overflow-hidden">
+                            <div id="courseProgressBar" class="h-full bg-green-500 w-0 transition-all duration-500"></div>
+                        </div>
+                        <span id="courseProgressText" class="text-sm font-bold">0%</span>
+                    </div>
+                </div>
+
+                <div id="moduleList" class="space-y-4">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- LESSON VIEWER SCREEN -->
+            <div id="lessonScreen" class="screen-view hide space-y-6">
+                <div class="flex justify-between items-center">
+                    <button onclick="navigate('course')" class="glass-card px-4 py-2 rounded-xl hover:bg-white/10 transition flex items-center gap-2">
+                        <i class="fas fa-arrow-right rtl:rotate-180"></i>
+                        <span data-ur="واپس کورس" data-en="Back to Course">واپس کورس</span>
+                    </button>
+                    
+                    <!-- TTS Controls (Text to speech) -->
+                    <div class="glass-card px-2 py-1 rounded-xl flex items-center gap-1">
+                        <button id="ttsPlay" class="w-10 h-10 rounded-lg hover:bg-white/10 flex items-center justify-center text-green-500 transition" title="Play">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <button id="ttsPause" class="w-10 h-10 rounded-lg hover:bg-white/10 flex items-center justify-center text-yellow-500 transition hide" title="Pause">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                        <button id="ttsStop" class="w-10 h-10 rounded-lg hover:bg-white/10 flex items-center justify-center text-red-500 transition" title="Stop">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                        <div id="ttsIndicator" class="w-2 h-2 rounded-full bg-green-500 ml-2 mr-2 animate-pulse hide"></div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 md:p-8 rounded-3xl">
+                    <h2 id="lessonTitle" class="text-2xl md:text-3xl font-bold mb-6 text-primary">Lesson Title</h2>
+                    
+                    <div id="lessonContent" class="prose prose-invert max-w-none text-lg space-y-4 leading-relaxed">
+                        <!-- Content -->
+                    </div>
+
+                    <div class="mt-8 p-5 rounded-2xl bg-secondary/10 border border-secondary/20">
+                        <h3 class="font-bold flex items-center gap-2 mb-2 text-secondary">
+                            <i class="fas fa-lightbulb"></i>
+                            <span data-ur="خلاصہ" data-en="Summary">خلاصہ</span>
+                        </h3>
+                        <p id="lessonSummary" class="opacity-90"></p>
+                    </div>
+
+                    <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-between items-center border-t border-white/10 pt-6">
+                        <button id="btnMarkComplete" class="w-full sm:w-auto px-6 py-3 rounded-xl border border-white/20 hover:bg-white/5 transition flex items-center justify-center gap-2">
+                            <i class="fas fa-check-circle"></i>
+                            <span data-ur="مکمل کے طور پر نشان زد کریں" data-en="Mark as Complete">مکمل کے طور پر نشان زد کریں</span>
+                        </button>
+                        
+                        <button id="btnTakeQuiz" class="w-full sm:w-auto bg-primary hover:bg-blue-600 text-white px-6 py-3 rounded-xl transition shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2">
+                            <span data-ur="کوئز شروع کریں" data-en="Start Quiz">کوئز شروع کریں</span>
+                            <i class="fas fa-arrow-left rtl:rotate-180"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- QUIZ SCREEN -->
+            <div id="quizScreen" class="screen-view hide max-w-3xl mx-auto space-y-6">
+                 <button onclick="navigate('lesson')" class="glass-card px-4 py-2 rounded-xl hover:bg-white/10 transition flex items-center gap-2 w-max mb-4">
+                    <i class="fas fa-times"></i>
+                    <span data-ur="کوئز چھوڑیں" data-en="Exit Quiz">کوئز چھوڑیں</span>
+                </button>
+
+                <div class="glass-card p-6 md:p-8 rounded-3xl">
+                    <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                        <h2 class="text-xl font-bold" data-ur="معروضی سوالات" data-en="Quiz Assessment">معروضی سوالات</h2>
+                        <span id="quizProgress" class="px-3 py-1 bg-white/10 rounded-full text-sm">1 / 5</span>
+                    </div>
+
+                    <div id="quizContainer">
+                        <h3 id="quizQuestion" class="text-xl md:text-2xl font-semibold mb-6 leading-relaxed">Question text?</h3>
+                        <div id="quizOptions" class="space-y-3">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+
+                    <div id="quizResultContainer" class="hide text-center py-8">
+                        <div id="quizResultIcon" class="w-24 h-24 rounded-full mx-auto flex items-center justify-center text-5xl mb-4"></div>
+                        <h3 id="quizResultTitle" class="text-3xl font-bold mb-2">Result</h3>
+                        <p id="quizScoreText" class="text-xl mb-6 opacity-80">Score: 0%</p>
+                        
+                        <div class="flex flex-col sm:flex-row justify-center gap-4">
+                            <button id="btnReviewQuiz" class="px-6 py-3 rounded-xl border border-white/20 hover:bg-white/5 transition">
+                                <span data-ur="جوابات کا جائزہ لیں" data-en="Review Answers">جوابات کا جائزہ لیں</span>
+                            </button>
+                            <button id="btnFinishQuiz" class="bg-primary hover:bg-blue-600 px-6 py-3 rounded-xl transition">
+                                <span data-ur="جاری رکھیں" data-en="Continue">جاری رکھیں</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Review Mode Container -->
+                    <div id="quizReviewContainer" class="hide mt-8 space-y-6 text-right rtl:text-right ltr:text-left border-t border-white/10 pt-6">
+                        <!-- Populated dynamically -->
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- PROFILE SCREEN -->
+            <div id="profileScreen" class="screen-view hide space-y-6">
+                <h2 class="text-2xl font-bold mb-4" data-ur="میرا پروفائل" data-en="My Profile">میرا پروفائل</h2>
+                
+                <div class="glass-card p-6 md:p-8 rounded-3xl flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-right rtl:md:text-right ltr:md:text-left">
+                    <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-blue-500 to-purple-500 flex items-center justify-center text-4xl font-bold shadow-lg">
+                        <i class="fas fa-user text-white"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 id="profileName" class="text-2xl font-bold">User Name</h3>
+                        <p id="profileEmail" class="opacity-70 mb-4">user@email.com</p>
+                        
+                        <div class="grid grid-cols-2 gap-4 mt-4 text-center">
+                            <div class="glass-card p-4 rounded-xl">
+                                <p class="text-sm opacity-70" data-ur="مکمل کورسز" data-en="Completed Courses">مکمل کورسز</p>
+                                <p id="profileCompleted" class="text-xl font-bold text-primary mt-1">0</p>
+                            </div>
+                            <div class="glass-card p-4 rounded-xl">
+                                <p class="text-sm opacity-70" data-ur="شامل ہونے کی تاریخ" data-en="Join Date">شامل ہونے کی تاریخ</p>
+                                <p id="profileJoinDate" class="text-sm font-bold mt-2">--/--/----</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card p-6 rounded-3xl">
+                    <h3 class="font-bold mb-4 text-lg border-b border-white/10 pb-2" data-ur="ترتیبات" data-en="Settings">ترتیبات</h3>
+                    <ul class="space-y-2">
+                        <li>
+                            <button id="btnLogout" class="w-full flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition text-red-500">
+                                <span class="flex items-center gap-3"><i class="fas fa-sign-out-alt"></i> <span data-ur="لاگ آؤٹ" data-en="Logout">لاگ آؤٹ</span></span>
+                                <i class="fas fa-chevron-left rtl:rotate-180 opacity-50"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Bottom Navigation (Mobile) -->
+        <div class="fixed bottom-0 w-full glass-nav flex justify-around p-3 md:hidden z-30 pb-safe">
+            <button onclick="navigate('dashboard')" class="flex flex-col items-center gap-1 p-2 w-16 opacity-70 hover:opacity-100 transition text-primary">
+                <i class="fas fa-home text-xl"></i>
+                <span class="text-[10px]" data-ur="ہوم" data-en="Home">ہوم</span>
+            </button>
+            <button onclick="navigate('dashboard')" class="flex flex-col items-center gap-1 p-2 w-16 opacity-70 hover:opacity-100 transition">
+                <i class="fas fa-book text-xl"></i>
+                <span class="text-[10px]" data-ur="کورسز" data-en="Courses">کورسز</span>
+            </button>
+            <button onclick="navigate('profile')" class="flex flex-col items-center gap-1 p-2 w-16 opacity-70 hover:opacity-100 transition">
+                <i class="fas fa-user text-xl"></i>
+                <span class="text-[10px]" data-ur="پروفائل" data-en="Profile">پروفائل</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Completion Modal -->
+    <div id="completionModal" class="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 hide fade-in">
+        <div class="glass-card p-8 rounded-3xl max-w-sm w-full text-center relative overflow-hidden slide-up bg-gradient-dark border-green-500/30">
+            <div class="absolute top-0 left-0 w-full h-2 bg-green-500"></div>
+            <i class="fas fa-award text-6xl text-green-400 mb-4 drop-shadow-lg"></i>
+            <h2 class="text-3xl font-bold mb-2" data-ur="🎉 مبارک ہو" data-en="🎉 Congratulations">🎉 مبارک ہو</h2>
+            <p class="mb-6 opacity-90" data-ur="آپ نے یہ کورس کامیابی سے مکمل کر لیا ہے۔" data-en="You have successfully completed this course.">آپ نے یہ کورس کامیابی سے مکمل کر لیا ہے۔</p>
+            <h3 id="modalCourseName" class="font-bold text-lg mb-8 text-primary">Course Name</h3>
+            
+            <div class="space-y-3">
+                <button onclick="closeModalAndGoHome()" class="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-xl font-bold transition shadow-lg shadow-green-500/30">
+                    <span data-ur="واپس ڈیش بورڈ" data-en="Back to Dashboard">واپس ڈیش بورڈ</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK Setup -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPhh4hpsAr-QEORO1J6i-u3D4vuYD3iUQ",
+            authDomain: "q-tech-hub.firebaseapp.com",
+            projectId: "q-tech-hub",
+            storageBucket: "q-tech-hub.firebasestorage.app",
+            messagingSenderId: "715068644327",
+            appId: "1:715068644327:web:2e9375cf4cc96d257e7b42"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- APP STATE ---
+        let currentLang = 'ur';
+        let currentUser = null;
+        let userData = { progress: {}, completedCourses: [] };
+        let activeScreen = 'splash';
+        
+        let activeCourseId = null;
+        let activeModuleId = null;
+        let activeLessonIndex = 0;
+        
+        let quizState = { active: false, questions: [], currentQ: 0, score: 0, answers: [] };
+
+        // --- COURSES DATA (Complete 7 Courses Hardcoded as requested) ---
+        // Yahan par saare 7 courses mukammal details aur quizzes ke sath default add kiye gaye hain
+        const COURSES = [
+            {
+                id: 'web-dev', icon: 'fa-code', color: 'text-blue-500', bg: 'bg-blue-500/20',
+                title: { ur: 'ویب ڈیولپمنٹ', en: 'Web Development' },
+                desc: { ur: 'شروع سے لے کر جدید ویب سائٹس بنانا سیکھیں۔ HTML, CSS, JavaScript شامل ہیں۔', en: 'Learn to build modern websites from scratch. Includes HTML, CSS, JavaScript.' },
+                modules: [
+                    {
+                        id: 'm1', title: { ur: 'ویب کا تعارف اور HTML', en: 'Intro to Web & HTML' },
+                        lessons: [
+                            {
+                                id: 'l1', title: { ur: 'HTML کی بنیادی باتیں اور ٹیگز', en: 'HTML Fundamentals & Tags' },
+                                content: {
+                                    ur: '<p>HTML (HyperText Markup Language) ویب کا بنیادی ڈھانچہ ہے۔ ہر ویب سائٹ HTML پر مبنی ہوتی ہے۔ ٹیگز (Tags) کا استعمال کرتے ہوئے ہم براؤزر کو بتاتے ہیں کہ مواد کو کیسے دکھانا ہے۔</p><br><ul><li><code>&lt;h1&gt;</code> سے <code>&lt;h6&gt;</code> تک سرخیاں (Headings) ہوتی ہیں۔</li><li><code>&lt;p&gt;</code> پیراگراف کے لیے استعمال ہوتا ہے۔</li><li>بنیادی ڈھانچے میں <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, اور <code>&lt;body&gt;</code> شامل ہوتے ہیں۔</li></ul>',
+                                    en: '<p>HTML (HyperText Markup Language) is the skeleton of the web. Every website is built on HTML. Using Tags, we tell the browser how to display content.</p><br><ul><li><code>&lt;h1&gt;</code> to <code>&lt;h6&gt;</code> are used for headings.</li><li><code>&lt;p&gt;</code> is for paragraphs.</li><li>Basic structure includes <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, and <code>&lt;body&gt;</code>.</li></ul>'
+                                },
+                                summary: { ur: 'HTML ویب سائٹس کا سٹرکچر بنانے کے لیے ٹیگز کا استعمال کرتی ہے۔', en: 'HTML uses tags to build the structure of websites.' },
+                                quiz: [
+                                    {
+                                        q: { ur: 'سب سے بڑی سرخی (Heading) کے لیے کون سا ٹیگ استعمال ہوتا ہے؟', en: 'Which tag is used for the largest heading?' },
+                                        options: { ur: ['<header>', '<h1>', '<h6>', '<p>'], en: ['<header>', '<h1>', '<h6>', '<p>'] }, ans: 1,
+                                        exp: { ur: '<h1> سب سے اہم اور بڑی سرخی کے لیے استعمال ہوتا ہے۔', en: '<h1> is used for the most important and largest heading.' }
+                                    },
+                                    {
+                                        q: { ur: 'HTML کا کیا مطلب ہے؟', en: 'What does HTML stand for?' },
+                                        options: { ur: ['HyperText Markup Language', 'HighText Machine Language', 'Hyper Loop Machine', 'Home Tool Markup Language'], en: ['HyperText Markup Language', 'HighText Machine Language', 'Hyper Loop Machine', 'Home Tool Markup Language'] }, ans: 0,
+                                        exp: { ur: 'HTML کا مطلب ہائپر ٹیکسٹ مارک اپ لینگویج ہے۔', en: 'HTML stands for HyperText Markup Language.' }
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'l2', title: { ur: 'HTML فارمز اور ان پٹ', en: 'HTML Forms & Inputs' },
+                                content: {
+                                    ur: '<p>فارمز کا استعمال صارفین سے معلومات اکٹھا کرنے کے لیے کیا جاتا ہے (جیسے لاگ ان یا سائن اپ)۔</p><br><p>اہم ٹیگز: <code>&lt;form&gt;</code> پورے فارم کو گھیرتا ہے۔ <code>&lt;input type="text"&gt;</code> نام لکھنے کے لیے، اور <code>&lt;button&gt;</code> فارم جمع (submit) کرنے کے لیے استعمال ہوتا ہے۔</p>',
+                                    en: '<p>Forms are used to collect information from users (like login or signup).</p><br><p>Key tags: <code>&lt;form&gt;</code> wraps the form. <code>&lt;input type="text"&gt;</code> for text input, and <code>&lt;button&gt;</code> to submit.</p>'
+                                },
+                                summary: { ur: 'فارمز کی مدد سے ہم یوزر سے ڈیٹا لے سکتے ہیں۔', en: 'We use forms to collect data from the user.' },
+                                quiz: [
+                                    {
+                                        q: { ur: 'یوزر سے ڈیٹا لینے کے لیے کون سا ٹیگ استعمال ہوتا ہے؟', en: 'Which tag is used to take input from the user?' },
+                                        options: { ur: ['<form>', '<input>', 'دونوں', 'کوئی نہیں'], en: ['<form>', '<input>', 'Both', 'None'] }, ans: 2,
+                                        exp: { ur: 'فارم کا ڈھانچہ بنانے کے لیے دونوں ضروری ہیں۔', en: 'Both are necessary to build a form structure.' }
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        id: 'm2', title: { ur: 'CSS اور اسٹائلنگ', en: 'CSS & Styling' },
+                        lessons: [
+                            {
+                                id: 'l3', title: { ur: 'CSS کی بنیادی باتیں', en: 'CSS Basics' },
+                                content: {
+                                    ur: '<p>CSS (Cascading Style Sheets) ویب سائٹ کی خوبصورتی کے لیے استعمال ہوتی ہے۔</p><br><p>اگر HTML ڈھانچہ ہے تو CSS اس کا رنگ و روپ ہے۔ اس کی مدد سے ہم رنگ (colors)، فونٹس (fonts)، اور لے آؤٹ (layout) سیٹ کرتے ہیں۔ ہم CSS کو Inline, Internal، یا External فائل کے ذریعے HTML سے جوڑ سکتے ہیں۔</p>',
+                                    en: '<p>CSS (Cascading Style Sheets) is used to beautify the website.</p><br><p>If HTML is the skeleton, CSS is the appearance. We set colors, fonts, and layouts. We can link CSS via Inline, Internal, or External files.</p>'
+                                },
+                                summary: { ur: 'CSS رنگ، ڈیزائن اور لے آؤٹ کو کنٹرول کرتی ہے۔', en: 'CSS controls colors, design, and layouts.' },
+                                quiz: [
+                                    {
+                                        q: { ur: 'ویب سائٹ کا رنگ تبدیل کرنے کے لیے کیا استعمال کریں گے؟', en: 'What will you use to change the website color?' },
+                                        options: { ur: ['HTML', 'JavaScript', 'CSS', 'Python'], en: ['HTML', 'JavaScript', 'CSS', 'Python'] }, ans: 2,
+                                        exp: { ur: 'رنگ اور ڈیزائن CSS کا کام ہے۔', en: 'Colors and design are CSS jobs.' }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'freelancing', icon: 'fa-laptop-house', color: 'text-green-500', bg: 'bg-green-500/20',
+                title: { ur: 'فری لانسنگ', en: 'Freelancing' },
+                desc: { ur: 'Fiverr اور Upwork پر آن لائن کام کر کے پیسے کمانا سیکھیں۔', en: 'Learn to earn money online working on Fiverr and Upwork.' },
+                modules: [
+                    {
+                        id: 'm1', title: { ur: 'فری لانسنگ کا آغاز', en: 'Starting Freelancing' },
+                        lessons: [
+                            {
+                                id: 'l1', title: { ur: 'Fiverr پروفائل اور گگ', en: 'Fiverr Profile & Gig' },
+                                content: {
+                                    ur: '<p>فائور (Fiverr) دنیا کی سب سے بڑی فری لانس مارکیٹ پلیس ہے۔ یہاں آپ اپنی خدمات (Services) بیچتے ہیں۔</p><br><ul><li><b>پروفائل:</b> آپ کی تصویر اور تفصیل پروفیشنل ہونی چاہیے۔</li><li><b>گگ (Gig):</b> یہ آپ کی دکان ہے۔ اس کا تھمب نیل (تصویر) اور ٹائٹل بہت پرکشش ہونا چاہیے تاکہ کلائنٹ کلک کرے۔</li></ul>',
+                                    en: '<p>Fiverr is the largest freelance marketplace. Here you sell your services.</p><br><ul><li><b>Profile:</b> Your picture and description must be professional.</li><li><b>Gig:</b> This is your shop. Its thumbnail and title must be attractive so clients click.</li></ul>'
+                                },
+                                summary: { ur: 'ایک شاندار گگ اور پروفائل فائور پر کامیابی کی ضمانت ہے۔', en: 'A great Gig and profile guarantee success on Fiverr.' },
+                                quiz: [
+                                    {
+                                        q: { ur: 'Fiverr پر آپ کی پیش کردہ سروس کو کیا کہا جاتا ہے؟', en: 'What is the service you offer on Fiverr called?' },
+                                        options: { ur: ['Post', 'Gig', 'Task', 'Job'], en: ['Post', 'Gig', 'Task', 'Job'] }, ans: 1,
+                                        exp: { ur: 'Fiverr پر سروس کو Gig کہتے ہیں۔', en: 'A service on Fiverr is called a Gig.' }
+                                    }
+                                ]
+                            },
+                            {
+                                id: 'l2', title: { ur: 'کلائنٹ کمیونیکیشن', en: 'Client Communication' },
+                                content: {
+                                    ur: '<p>کلائنٹ سے بات چیت فری لانسنگ کا سب سے اہم حصہ ہے۔ ہمیشہ پروفیشنل رہیں۔ "Sir/Madam" کا استعمال کریں، ان کی ضروریات کو غور سے سنیں، اور کام وقت پر مکمل کر کے دیں۔ کبھی بھی جھوٹے وعدے نہ کریں۔',
+                                    en: '<p>Communicating with the client is the most important part of freelancing. Always be professional. Use "Sir/Madam", listen to their needs carefully, and deliver on time. Never make false promises.</p>'
+                                },
+                                summary: { ur: 'اچھا اخلاق اور وقت کی پابندی کلائنٹ کو خوش رکھتی ہے۔', en: 'Good manners and punctuality keep clients happy.' },
+                                quiz: [
+                                    {
+                                        q: { ur: 'کلائنٹ سے بات کرتے وقت سب سے اہم چیز کیا ہے؟', en: 'What is most important when talking to a client?' },
+                                        options: { ur: ['غصہ کرنا', 'پروفیشنل اور ایماندار رہنا', 'ریپلائی نہ کرنا', 'جھوٹ بولنا'], en: ['Being angry', 'Being professional and honest', 'Not replying', 'Lying'] }, ans: 1,
+                                        exp: { ur: 'پروفیشنلزم سے ہی کلائنٹ بھروسہ کرتا ہے۔', en: 'Professionalism builds client trust.' }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'video-editing', icon: 'fa-film', color: 'text-red-500', bg: 'bg-red-500/20',
+                title: { ur: 'ویڈیو ایڈیٹنگ', en: 'Video Editing' },
+                desc: { ur: 'CapCut اور VN کا استعمال کرتے ہوئے پروفیشنل ویڈیو ایڈیٹنگ سیکھیں۔', en: 'Learn professional video editing using CapCut and VN.' },
+                modules: [
+                    {
+                        id: 'm1', title: { ur: 'موبائل ایڈیٹنگ', en: 'Mobile Editing' },
+                        lessons: [
+                            {
+                                id: 'l1', title: { ur: 'CapCut کی بنیادی باتیں', en: 'CapCut Basics' },
+                                content: {
+                                    ur: '<p>CapCut موبائل ویڈیو ایڈیٹنگ کا بہترین ٹول ہے۔</p><br><p>اس میں آپ ویڈیو کو کٹ (Trim) کر سکتے ہیں، ٹیکسٹ شامل کر سکتے ہیں، اور شاندار ٹرانزیشنز (Transitions) لگا سکتے ہیں۔ سب سے پہلے فالتو حصوں کو کاٹنا (Split) سیکھیں۔',
+                                    en: '<p>CapCut is the best tool for mobile video editing.</p><br><p>You can trim videos, add text, and apply amazing transitions. First, learn to Split and remove unwanted parts.</p>'
+                                },
+                                summary: { ur: 'CapCut کی مدد سے موبائل پر ہی پروفیشنل ویڈیوز بنائی جا سکتی ہیں۔', en: 'Professional videos can be made on mobile using CapCut.' },
+                                quiz: [
+                                    {
+                                        q: { ur: 'ویڈیو کے درمیانی حصے کو کاٹنے کے لیے کون سا آپشن استعمال ہوتا ہے؟', en: 'Which option is used to cut the middle part of a video?' },
+                                        options: { ur: ['Export', 'Split', 'Filter', 'Audio'], en: ['Export', 'Split', 'Filter', 'Audio'] }, ans: 1,
+                                        exp: { ur: 'Split کا آپشن ویڈیو کو حصوں میں تقسیم کرتا ہے۔', en: 'The Split option divides the video into parts.' }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'ai-image', icon: 'fa-image', color: 'text-purple-500', bg: 'bg-purple-500/20',
+                title: { ur: 'AI امیج کریشن', en: 'AI Image Creation' },
+                desc: { ur: 'Midjourney اور مفت AI ٹولز کی مدد سے تصاویر بنانا سیکھیں۔', en: 'Learn to create images using Midjourney and free AI tools.' },
+                modules: [
+                    {
+                        id: 'm1', title: { ur: 'پرامپٹ انجینئرنگ', en: 'Prompt Engineering' },
+                        lessons: [
+                            {
+                                id: 'l1', title: { ur: 'پرامپٹ کیسے لکھیں؟', en: 'How to write a Prompt?' },
+                                content: {
+                                    ur: '<p>AI کو ہدایات دینے کے فن کو پرامپٹ انجینئرنگ کہتے ہیں۔</p><br><p>ایک اچھے پرامپٹ میں یہ چیزیں ہونی چاہئیں: Subject (کیا بنانا ہے)، Environment (بیک گراؤنڈ کیسا ہو)، Lighting (روشنی کیسی ہو)، اور Style (جیسے 4k, realistic, cartoon)۔</p>',
+                                    en: '<p>The art of instructing AI is called Prompt Engineering.</p><br><p>A good prompt should have: Subject, Environment, Lighting, and Style (e.g., 4k, realistic, cartoon).</p>'
+                                },
+                                summary: { ur: 'تفصیلی پرامپٹ بہتر تصویر بناتا ہے۔', en: 'A detailed prompt creates a better image.' },
+                                quiz: [
+                                    {
+                                        q: { ur: 'AI سے تصویر بنوانے کی ہدایات کو کیا کہتے ہیں؟', en: 'What are the instructions to generate an AI image called?' },
+                                        options: { ur: ['Code', 'Prompt', 'Script', 'Text'], en: ['Code', 'Prompt', 'Script', 'Text'] }, ans: 1,
+                                        exp: { ur: 'AI کی زبان میں ہدایات کو Prompt کہتے ہیں۔', en: 'In AI terms, instructions are called a Prompt.' }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'ai-video', icon: 'fa-video', color: 'text-teal-500', bg: 'bg-teal-500/20',
+                title: { ur: 'AI ویڈیو کریشن', en: 'AI Video Creation' },
+                desc: { ur: 'ٹیکسٹ اور تصاویر سے خودکار ویڈیوز اور وائس اوور بنانا سیکھیں۔', en: 'Learn to make auto-videos and voiceovers from text and images.' },
+                modules: [
+                    {
+                        id: 'm1', title: { ur: 'AI ویڈیوز کا آغاز', en: 'Starting AI Videos' },
+                        lessons: [
+                            {
+                                id: 'l1', title: { ur: 'ٹیکسٹ سے ویڈیو (Text to Video)', en: 'Text to Video' },
+                                content: {
+                                    ur: '<p>آج کل بہت سے ٹولز آپ کے لکھے ہوئے ٹیکسٹ کو مکمل ویڈیو میں بدل دیتے ہیں۔ آپ کو صرف ایک سکرپٹ لکھنا ہوتا ہے۔ AI خود بخود اس کے مطابق تصاویر، ویڈیوز اور آواز (Voiceover) لگا دیتا ہے۔ ان ٹولز میں InVideo اور RunwayML بہت مشہور ہیں۔</p>',
+                                    en: '<p>Nowadays, many tools convert your text into a full video. You just write a script. AI automatically adds images, videos, and voiceover. Tools like InVideo and RunwayML are very famous.</p>'
+                                },
+                                summary: { ur: 'AI ٹولز صرف ایک سکرپٹ کی مدد سے مکمل ویڈیو تیار کر سکتے ہیں۔', en: 'AI tools can prepare a full video using just a script.' },
+                                quiz: [
+                                    {
+                                        q: { ur: 'ٹیکسٹ ٹو ویڈیو ٹولز میں سب سے ضروری چیز کیا ہے؟', en: 'What is the most important thing in Text-to-Video tools?' },
+                                        options: { ur: ['کیمرہ', 'سکرپٹ (Script)', 'مائیکروفون', 'لائٹنگ'], en: ['Camera', 'Script', 'Microphone', 'Lighting'] }, ans: 1,
+                                        exp: { ur: 'AI سکرپٹ کو پڑھ کر ہی ویڈیو بناتا ہے۔', en: 'AI generates the video by reading the script.' }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'graphic-design', icon: 'fa-pen-nib', color: 'text-pink-500', bg: 'bg-pink-500/20',
+                title: { ur: 'گرافک ڈیزائن', en: 'Graphic Design' },
+                desc: { ur: 'Canva کا استعمال کرتے ہوئے لوگو، پوسٹر اور تھمب نیل بنانا سیکھیں۔', en: 'Learn to design logos, posters, and thumbnails using Canva.' },
+                modules: [
+                    {
+                        id: 'm1', title: { ur: 'Canva بیسکس', en: 'Canva Basics' },
+                        lessons: [
+                            {
+                                id: 'l1', title: { ur: 'Canva کا تعارف', en: 'Intro to Canva' },
+                                content: {
+                                    ur: '<p>Canva گرافک ڈیزائننگ کا سب سے آسان ٹول ہے۔ اس میں بنے بنائے ٹیمپلیٹس (Templates) موجود ہوتے ہیں۔</p><br><p>آپ ان ٹیمپلیٹس میں اپنا ٹیکسٹ، کلرز، اور تصاویر بدل کر منٹوں میں ایک پروفیشنل پوسٹر یا تھمب نیل ڈیزائن کر سکتے ہیں۔ کلر تھیوری (Color Theory) کا دھیان رکھیں، یعنی کون سے رنگ ایک ساتھ اچھے لگتے ہیں۔</p>',
+                                    en: '<p>Canva is the easiest graphic design tool. It has pre-made templates.</p><br><p>You can change text, colors, and images in these templates to design a professional poster or thumbnail in minutes. Pay attention to Color Theory.</p>'
+                                },
+                                summary: { ur: 'Canva بنے بنائے ٹیمپلیٹس کی مدد سے ڈیزائننگ کو آسان بناتا ہے۔', en: 'Canva makes designing easy with pre-made templates.' },
+                                quiz: [
+                                    {
+                                        q: { ur: 'Canva میں پہلے سے بنے ہوئے ڈیزائنز کو کیا کہتے ہیں؟', en: 'What are pre-made designs in Canva called?' },
+                                        options: { ur: ['Files', 'Templates', 'Docs', 'Sheets'], en: ['Files', 'Templates', 'Docs', 'Sheets'] }, ans: 1,
+                                        exp: { ur: 'پہلے سے بنے ڈیزائنز کو Templates کہا جاتا ہے۔', en: 'Pre-made designs are called Templates.' }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            },
+            {
+                id: 'computer-basics', icon: 'fa-desktop', color: 'text-gray-500', bg: 'bg-gray-500/20',
+                title: { ur: 'کمپیوٹر بیسکس', en: 'Computer Basics' },
+                desc: { ur: 'ونڈوز، انٹرنیٹ اور سافٹ ویئر کا بنیادی استعمال سیکھیں۔', en: 'Learn the basic use of Windows, Internet, and Software.' },
+                modules: [
+                    {
+                        id: 'm1', title: { ur: 'کمپیوٹر اور انٹرنیٹ', en: 'Computer & Internet' },
+                        lessons: [
+                            {
+                                id: 'l1', title: { ur: 'ہارڈویئر اور سافٹ ویئر', en: 'Hardware & Software' },
+                                content: {
+                                    ur: '<p>کمپیوٹر دو چیزوں سے مل کر بنتا ہے:</p><ul><li><b>ہارڈویئر:</b> وہ حصے جنہیں ہم چھو سکتے ہیں (جیسے ماؤس، کی بورڈ، مانیٹر)۔</li><li><b>سافٹ ویئر:</b> وہ پروگرامز جو کمپیوٹر کے اندر چلتے ہیں (جیسے ونڈوز، گوگل کروم، مائیکروسافٹ ورڈ)۔</li></ul>',
+                                    en: '<p>A computer is made of two things:</p><ul><li><b>Hardware:</b> Parts we can touch (e.g., Mouse, Keyboard, Monitor).</li><li><b>Software:</b> Programs running inside the computer (e.g., Windows, Google Chrome).</li></ul>'
+                                },
+                                summary: { ur: 'کمپیوٹر کے طبعی حصے ہارڈویئر اور پروگرامز سافٹ ویئر کہلاتے ہیں۔', en: 'Physical parts are Hardware and programs are Software.' },
+                                quiz: [
+                                    {
+                                        q: { ur: 'ان میں سے کون سا "ہارڈویئر" ہے؟', en: 'Which of the following is "Hardware"?' },
+                                        options: { ur: ['Google Chrome', 'Mouse', 'Windows', 'Microsoft Word'], en: ['Google Chrome', 'Mouse', 'Windows', 'Microsoft Word'] }, ans: 1,
+                                        exp: { ur: 'ماؤس کو ہم چھو سکتے ہیں، اس لیے یہ ہارڈویئر ہے۔', en: 'We can touch the mouse, so it is hardware.' }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // --- DOM ELEMENTS ---
+        const els = {
+            screens: document.querySelectorAll('.screen-view, #splashScreen, #authScreen, #mainApp'),
+            toast: document.getElementById('toast'),
+            toastMsg: document.getElementById('toastMsg'),
+            themeToggle: document.getElementById('themeToggle'),
+            themeIcon: document.getElementById('themeIcon'),
+            langEn: document.getElementById('langToggleEn'),
+            langUr: document.getElementById('langToggleUr'),
+            
+            // Auth UI
+            authForm: document.getElementById('authForm'),
+            authTitle: document.getElementById('authTitle'),
+            authSubtitle: document.getElementById('authSubtitle'),
+            authName: document.getElementById('authName'),
+            nameField: document.getElementById('nameField'),
+            authEmail: document.getElementById('authEmail'),
+            authPassword: document.getElementById('authPassword'),
+            authSubmitBtn: document.getElementById('authSubmitBtn'),
+            authSwitchText: document.getElementById('authSwitchText'),
+            authSwitchBtn: document.getElementById('authSwitchBtn'),
+            
+            // Dashboard UI
+            userName: document.getElementById('navUserName'),
+            dashWelcome: document.getElementById('dashWelcome'),
+            dashCompletedCount: document.getElementById('dashCompletedCount'),
+            dashAvgScore: document.getElementById('dashAvgScore'),
+            courseGrid: document.getElementById('courseGrid'),
+            
+            // Course Viewer UI
+            courseTitle: document.getElementById('courseTitle'),
+            courseDesc: document.getElementById('courseDesc'),
+            courseIconLg: document.getElementById('courseIconLg'),
+            courseProgressBar: document.getElementById('courseProgressBar'),
+            courseProgressText: document.getElementById('courseProgressText'),
+            moduleList: document.getElementById('moduleList'),
+            
+            // Lesson Viewer UI
+            lessonTitle: document.getElementById('lessonTitle'),
+            lessonContent: document.getElementById('lessonContent'),
+            lessonSummary: document.getElementById('lessonSummary'),
+            btnMarkComplete: document.getElementById('btnMarkComplete'),
+            btnTakeQuiz: document.getElementById('btnTakeQuiz'),
+            
+            // TTS UI
+            ttsPlay: document.getElementById('ttsPlay'),
+            ttsPause: document.getElementById('ttsPause'),
+            ttsStop: document.getElementById('ttsStop'),
+            ttsIndicator: document.getElementById('ttsIndicator'),
+            
+            // Quiz UI
+            quizScreen: document.getElementById('quizScreen'),
+            quizContainer: document.getElementById('quizContainer'),
+            quizQuestion: document.getElementById('quizQuestion'),
+            quizOptions: document.getElementById('quizOptions'),
+            quizProgress: document.getElementById('quizProgress'),
+            quizResultContainer: document.getElementById('quizResultContainer'),
+            quizResultIcon: document.getElementById('quizResultIcon'),
+            quizResultTitle: document.getElementById('quizResultTitle'),
+            quizScoreText: document.getElementById('quizScoreText'),
+            btnReviewQuiz: document.getElementById('btnReviewQuiz'),
+            btnFinishQuiz: document.getElementById('btnFinishQuiz'),
+            quizReviewContainer: document.getElementById('quizReviewContainer'),
+            
+            // Profile UI
+            profileName: document.getElementById('profileName'),
+            profileEmail: document.getElementById('profileEmail'),
+            profileCompleted: document.getElementById('profileCompleted'),
+            profileJoinDate: document.getElementById('profileJoinDate'),
+            btnLogout: document.getElementById('btnLogout'),
+            
+            // Modal
+            completionModal: document.getElementById('completionModal'),
+            modalCourseName: document.getElementById('modalCourseName')
+        };
+
+        let isLoginMode = true;
+
+        // --- UTILITIES (Toasts & Navigation) ---
+        // Toast dikhane ke liye function
+        function showToast(msgEn, msgUr, type = 'info') {
+            els.toastMsg.innerText = currentLang === 'ur' ? msgUr : msgEn;
+            els.toast.classList.remove('translate-x-full', 'opacity-0');
+            setTimeout(() => els.toast.classList.add('translate-x-full', 'opacity-0'), 3000);
+        }
+
+        // Screens ke darmiyan navigation
+        function navigate(screenId) {
+            stopTTS(); // Navigation par aawaz band karo
+            
+            document.getElementById('splashScreen').classList.add('hide');
+            document.getElementById('authScreen').classList.add('hide');
+            document.getElementById('mainApp').classList.add('hide');
+            
+            if(screenId === 'auth') {
+                document.getElementById('authScreen').classList.remove('hide');
+                return;
+            } else if (screenId === 'splash') {
+                document.getElementById('splashScreen').classList.remove('hide');
+                return;
+            }
+            
+            document.getElementById('mainApp').classList.remove('hide');
+            document.querySelectorAll('.screen-view').forEach(s => s.classList.add('hide'));
+            
+            if(screenId === 'lesson' && !activeCourseId) screenId = 'dashboard';
+            
+            const target = document.getElementById(screenId + 'Screen');
+            if(target) {
+                target.classList.remove('hide');
+                target.classList.add('fade-in');
+                activeScreen = screenId;
+                window.scrollTo(0,0);
+            }
+        }
+
+        // --- LANGUAGE SYSTEM (Zaban tabdeel karna) ---
+        function toggleLanguage() {
+            currentLang = currentLang === 'ur' ? 'en' : 'ur';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ur' ? 'rtl' : 'ltr';
+            
+            if (currentLang === 'ur') {
+                document.body.classList.add('urdu-text');
+                document.body.classList.remove('en-text');
+                els.langUr.classList.add('hide');
+                els.langEn.classList.remove('hide');
+            } else {
+                document.body.classList.remove('urdu-text');
+                document.body.classList.add('en-text');
+                els.langEn.classList.add('hide');
+                els.langUr.classList.remove('hide');
+            }
+
+            document.querySelectorAll('[data-ur]').forEach(el => {
+                if(el.tagName === 'INPUT') {
+                    el.placeholder = el.getAttribute(`data-${currentLang}`);
+                } else {
+                    el.innerText = el.getAttribute(`data-${currentLang}`);
+                }
+            });
+
+            if (activeScreen === 'dashboard') renderDashboard();
+            if (activeScreen === 'course') loadCourse(activeCourseId);
+            if (activeScreen === 'lesson') loadLesson(activeModuleId, activeLessonIndex);
+            if (activeScreen === 'quiz' && quizState.active) renderQuizQuestion();
+            
+            stopTTS();
+        }
+
+        els.langEn.addEventListener('click', toggleLanguage);
+        els.langUr.addEventListener('click', toggleLanguage);
+
+        // --- THEME SYSTEM (Dark/Light mode) ---
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            els.themeIcon.className = isDark ? 'fas fa-moon text-xl text-blue-400' : 'fas fa-sun text-xl text-yellow-500';
+            document.body.className = isDark 
+                ? 'bg-gradient-dark text-slate-100 min-h-screen flex flex-col ' + (currentLang==='ur'?'urdu-text':'en-text')
+                : 'bg-gradient-light text-slate-800 min-h-screen flex flex-col ' + (currentLang==='ur'?'urdu-text':'en-text');
+        }
+        els.themeToggle.addEventListener('click', toggleTheme);
+
+        // --- FIREBASE DB PATH LOGIC ---
+        // Canvas environment ke rules follow karte hue DB path
+        const isCanvasEnv = typeof __app_id !== 'undefined';
+        const canvasAppId = isCanvasEnv ? __app_id : 'default-app-id';
+        
+        function getUserDocRef(uid) {
+            if(isCanvasEnv) {
+                return doc(db, 'artifacts', canvasAppId, 'users', uid, 'profile', 'data');
+            } else {
+                return doc(db, 'users', uid);
+            }
+        }
+
+        // --- AUTHENTICATION (Login / Signup) ---
+        els.authSwitchBtn.addEventListener('click', () => {
+            isLoginMode = !isLoginMode;
+            els.nameField.classList.toggle('hide');
+            els.authTitle.innerText = currentLang === 'ur' ? (isLoginMode ? 'لاگ ان کریں' : 'اکاؤنٹ بنائیں') : (isLoginMode ? 'Login' : 'Create Account');
+            els.authSubmitBtn.querySelector('span').innerText = currentLang === 'ur' ? (isLoginMode ? 'لاگ ان' : 'سائن اپ') : (isLoginMode ? 'Login' : 'Sign Up');
+            els.authSwitchText.innerText = currentLang === 'ur' ? (isLoginMode ? 'اکاؤنٹ نہیں ہے؟' : 'پہلے سے اکاؤنٹ ہے؟') : (isLoginMode ? "Don't have an account?" : "Already have an account?");
+            els.authSwitchBtn.querySelector('span').innerText = currentLang === 'ur' ? (isLoginMode ? 'سائن اپ کریں' : 'لاگ ان کریں') : (isLoginMode ? 'Sign Up' : 'Login');
+        });
+
+        els.authForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = els.authEmail.value;
+            const pass = els.authPassword.value;
+            const name = els.authName.value;
+            
+            try {
+                els.authSubmitBtn.disabled = true;
+                els.authSubmitBtn.style.opacity = '0.7';
+                
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, pass);
+                    showToast('Login successful!', 'لاگ ان کامیاب!', 'success');
+                } else {
+                    const userCred = await createUserWithEmailAndPassword(auth, email, pass);
+                    await updateProfile(userCred.user, { displayName: name });
+                    
+                    const docRef = getUserDocRef(userCred.user.uid);
+                    await setDoc(docRef, {
+                        name: name,
+                        email: email,
+                        progress: {},
+                        completedCourses: [],
+                        joinDate: new Date().toISOString()
+                    });
+                    showToast('Account created!', 'اکاؤنٹ بن گیا!', 'success');
+                }
+            } catch (error) {
+                console.error(error);
+                showToast(error.message, 'ایک مسئلہ پیش آیا: ' + error.message, 'error');
+            } finally {
+                els.authSubmitBtn.disabled = false;
+                els.authSubmitBtn.style.opacity = '1';
+            }
+        });
+
+        els.btnLogout.addEventListener('click', () => {
+            signOut(auth);
+            userData = { progress: {}, completedCourses: [] };
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                currentUser = user;
+                els.userName.innerText = user.displayName || 'Learner';
+                els.profileName.innerText = user.displayName || 'Learner';
+                els.profileEmail.innerText = user.email;
+                
+                try {
+                    const docRef = getUserDocRef(user.uid);
+                    const docSnap = await getDoc(docRef);
+                    if (docSnap.exists()) {
+                        userData = docSnap.data();
+                        if(!userData.progress) userData.progress = {};
+                        if(!userData.completedCourses) userData.completedCourses = [];
+                    } else {
+                         await setDoc(docRef, {
+                            name: user.displayName || 'User',
+                            email: user.email,
+                            progress: {},
+                            completedCourses: [],
+                            joinDate: new Date().toISOString()
+                        });
+                    }
+                    
+                    if(userData.joinDate) {
+                        const date = new Date(userData.joinDate);
+                        els.profileJoinDate.innerText = date.toLocaleDateString();
+                    }
+                } catch(e) {
+                    console.error("DB Fetch Error", e);
+                }
+                
+                updateStatsUI();
+                renderDashboard();
+                navigate('dashboard');
+            } else {
+                currentUser = null;
+                setTimeout(() => navigate('auth'), 1000);
+            }
+        });
+
+        // --- APP LOGIC (Progress aur Stats) ---
+        function updateStatsUI() {
+            const completedCount = userData.completedCourses ? userData.completedCourses.length : 0;
+            els.dashCompletedCount.innerText = completedCount;
+            els.profileCompleted.innerText = completedCount;
+            
+            let totalScore = 0; let scoreCount = 0;
+            for(let c in userData.progress) {
+                if(userData.progress[c].scores) {
+                    for(let l in userData.progress[c].scores) {
+                        totalScore += userData.progress[c].scores[l];
+                        scoreCount++;
+                    }
+                }
+            }
+            els.dashAvgScore.innerText = scoreCount > 0 ? Math.round(totalScore/scoreCount) + '%' : '0%';
+        }
+
+        async function saveProgressToDB() {
+            if (!currentUser) return;
+            try {
+                const docRef = getUserDocRef(currentUser.uid);
+                await updateDoc(docRef, {
+                    progress: userData.progress,
+                    completedCourses: userData.completedCourses
+                });
+                updateStatsUI();
+            } catch(e) {
+                console.error("Error saving progress", e);
+            }
+        }
+
+        // --- RENDER DASHBOARD ---
+        function renderDashboard() {
+            els.dashWelcome.innerText = (currentLang === 'ur' ? 'خوش آمدید، ' : 'Welcome, ') + (currentUser?.displayName?.split(' ')[0] || 'User');
+            
+            els.courseGrid.innerHTML = '';
+            COURSES.forEach(course => {
+                const isCompleted = userData.completedCourses.includes(course.id);
+                const p = userData.progress[course.id];
+                const completedLessons = p?.completedLessons?.length || 0;
+                
+                let totalLessons = 0;
+                course.modules.forEach(m => totalLessons += m.lessons.length);
+                
+                const percent = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+
+                const card = document.createElement('div');
+                card.className = `glass-card p-6 rounded-3xl cursor-pointer hover:transform hover:scale-105 transition duration-300 relative overflow-hidden group`;
+                card.innerHTML = `
+                    <div class="absolute top-0 right-0 w-24 h-24 ${course.bg} rounded-bl-full z-0 group-hover:scale-110 transition"></div>
+                    <div class="relative z-10">
+                        <div class="w-12 h-12 rounded-xl ${course.bg} ${course.color} flex items-center justify-center text-xl mb-4">
+                            <i class="fas ${course.icon}"></i>
+                        </div>
+                        <h4 class="font-bold text-lg mb-1">${course.title[currentLang]}</h4>
+                        <p class="text-sm opacity-70 mb-4 line-clamp-2">${course.desc[currentLang]}</p>
+                        
+                        <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden mb-2">
+                            <div class="bg-${isCompleted ? 'green' : 'blue'}-500 h-full transition-all" style="width: ${percent}%"></div>
+                        </div>
+                        <div class="flex justify-between items-center text-xs opacity-70">
+                            <span>${percent}% ${currentLang==='ur'?'مکمل':'Completed'}</span>
+                            ${isCompleted ? '<i class="fas fa-check-circle text-green-500"></i>' : ''}
+                        </div>
+                    </div>
+                `;
+                card.onclick = () => loadCourse(course.id);
+                els.courseGrid.appendChild(card);
+            });
+        }
+
+        // --- RENDER COURSE ---
+        function loadCourse(courseId) {
+            const course = COURSES.find(c => c.id === courseId);
+            if (!course) return;
+            activeCourseId = courseId;
+            
+            els.courseTitle.innerText = course.title[currentLang];
+            els.courseDesc.innerText = course.desc[currentLang];
+            els.courseIconLg.innerHTML = `<i class="fas ${course.icon}"></i>`;
+            
+            if (!userData.progress[courseId]) {
+                userData.progress[courseId] = { completedLessons: [], scores: {} };
+            }
+            
+            const p = userData.progress[courseId];
+            let totalL = 0; let compL = p.completedLessons.length;
+            course.modules.forEach(m => totalL += m.lessons.length);
+            const percent = totalL > 0 ? Math.round((compL / totalL) * 100) : 0;
+            
+            els.courseProgressBar.style.width = percent + '%';
+            els.courseProgressText.innerText = percent + '%';
+
+            els.moduleList.innerHTML = '';
+            course.modules.forEach((mod, mIndex) => {
+                const modDiv = document.createElement('div');
+                modDiv.className = 'glass-card p-5 rounded-2xl';
+                
+                let lessonsHtml = '';
+                mod.lessons.forEach((less, lIndex) => {
+                    const isDone = p.completedLessons.includes(less.id);
+                    const score = p.scores[less.id];
+                    let statusHtml = '';
+                    if (isDone) {
+                        statusHtml = `<i class="fas fa-check-circle text-green-500"></i>`;
+                        if(score !== undefined) statusHtml += `<span class="text-xs ml-2 mr-2 opacity-70">${score}%</span>`;
+                    }
+
+                    lessonsHtml += `
+                        <div onclick="loadLesson('${mod.id}', ${lIndex})" class="p-3 mt-2 rounded-xl hover:bg-white/10 transition cursor-pointer flex justify-between items-center border border-white/5">
+                            <div class="flex items-center gap-3">
+                                <div class="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center text-sm">${lIndex + 1}</div>
+                                <span class="font-medium">${less.title[currentLang]}</span>
+                            </div>
+                            <div class="flex items-center">
+                                ${statusHtml}
+                                <i class="fas fa-chevron-left rtl:rotate-180 opacity-50 ml-3 mr-3 text-sm"></i>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                modDiv.innerHTML = `
+                    <h3 class="font-bold text-lg mb-2 flex items-center gap-2">
+                        <i class="fas fa-folder text-secondary"></i>
+                        ${mod.title[currentLang]}
+                    </h3>
+                    ${lessonsHtml}
+                `;
+                els.moduleList.appendChild(modDiv);
+            });
+            
+            navigate('course');
+        }
+
+        // --- RENDER LESSON ---
+        window.loadLesson = function(moduleId, lessonIndex) {
+            const course = COURSES.find(c => c.id === activeCourseId);
+            const mod = course.modules.find(m => m.id === moduleId);
+            const less = mod.lessons[lessonIndex];
+            
+            activeModuleId = moduleId;
+            activeLessonIndex = lessonIndex;
+            
+            els.lessonTitle.innerText = less.title[currentLang];
+            els.lessonContent.innerHTML = less.content[currentLang];
+            els.lessonSummary.innerText = less.summary[currentLang];
+            
+            const isDone = userData.progress[course.id].completedLessons.includes(less.id);
+            if (isDone) {
+                els.btnMarkComplete.classList.add('text-green-500', 'border-green-500/50');
+                els.btnMarkComplete.querySelector('span').innerText = currentLang === 'ur' ? 'مکمل ہو گیا' : 'Completed';
+            } else {
+                els.btnMarkComplete.classList.remove('text-green-500', 'border-green-500/50');
+                els.btnMarkComplete.querySelector('span').innerText = currentLang === 'ur' ? 'مکمل کے طور پر نشان زد کریں' : 'Mark as Complete';
+            }
+            
+            navigate('lesson');
+        }
+
+        // Mark Complete aur Quiz Unlock
+        els.btnMarkComplete.addEventListener('click', async () => {
+            const course = COURSES.find(c => c.id === activeCourseId);
+            const less = course.modules.find(m => m.id === activeModuleId).lessons[activeLessonIndex];
+            
+            const p = userData.progress[course.id];
+            if (!p.completedLessons.includes(less.id)) {
+                p.completedLessons.push(less.id);
+                els.btnMarkComplete.classList.add('text-green-500', 'border-green-500/50');
+                els.btnMarkComplete.querySelector('span').innerText = currentLang === 'ur' ? 'مکمل ہو گیا' : 'Completed';
+                
+                let totalL = 0;
+                course.modules.forEach(m => totalL += m.lessons.length);
+                if (p.completedLessons.length === totalL && !userData.completedCourses.includes(course.id)) {
+                    userData.completedCourses.push(course.id);
+                    showCompletionModal(course.title[currentLang]);
+                } else {
+                    showToast('Lesson marked as complete!', 'سبق مکمل ہو گیا!', 'success');
+                }
+                await saveProgressToDB();
+            }
+        });
+
+        function showCompletionModal(courseName) {
+            els.modalCourseName.innerText = courseName;
+            els.completionModal.classList.remove('hide');
+        }
+        
+        window.closeModalAndGoHome = () => {
+            els.completionModal.classList.add('hide');
+            navigate('dashboard');
+        }
+
+        // --- QUIZ SYSTEM (Sawal Jawab aur Score) ---
+        els.btnTakeQuiz.addEventListener('click', () => {
+            const course = COURSES.find(c => c.id === activeCourseId);
+            const less = course.modules.find(m => m.id === activeModuleId).lessons[activeLessonIndex];
+            
+            if(!less.quiz || less.quiz.length === 0) {
+                showToast('No quiz available for this lesson.', 'اس سبق کا کوئز موجود نہیں ہے۔');
+                return;
+            }
+            
+            stopTTS();
+            quizState = {
+                active: true,
+                questions: less.quiz,
+                currentQ: 0,
+                score: 0,
+                answers: []
+            };
+            
+            els.quizResultContainer.classList.add('hide');
+            els.quizReviewContainer.classList.add('hide');
+            els.quizContainer.classList.remove('hide');
+            
+            renderQuizQuestion();
+            navigate('quiz');
+        });
+
+        function renderQuizQuestion() {
+            const q = quizState.questions[quizState.currentQ];
+            els.quizProgress.innerText = `${quizState.currentQ + 1} / ${quizState.questions.length}`;
+            els.quizQuestion.innerText = q.q[currentLang];
+            
+            els.quizOptions.innerHTML = '';
+            q.options[currentLang].forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'w-full text-left rtl:text-right p-4 rounded-xl border border-white/20 hover:bg-white/10 transition glass-card mb-2 font-medium';
+                btn.innerText = opt;
+                btn.onclick = () => handleQuizAnswer(idx);
+                els.quizOptions.appendChild(btn);
+            });
+        }
+
+        function handleQuizAnswer(selectedIndex) {
+            quizState.answers[quizState.currentQ] = selectedIndex;
+            const isCorrect = selectedIndex === quizState.questions[quizState.currentQ].ans;
+            if(isCorrect) quizState.score++;
+            
+            quizState.currentQ++;
+            if (quizState.currentQ < quizState.questions.length) {
+                renderQuizQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        async function finishQuiz() {
+            els.quizContainer.classList.add('hide');
+            els.quizResultContainer.classList.remove('hide');
+            
+            // Score calculate karna
+            const percentage = Math.round((quizState.score / quizState.questions.length) * 100);
+            const passed = percentage >= 70; // 70% passing marks
+            
+            els.quizScoreText.innerText = `${currentLang==='ur'?'اسکور':'Score'}: ${percentage}% (${quizState.score}/${quizState.questions.length})`;
+            
+            if(passed) {
+                els.quizResultIcon.className = 'w-24 h-24 rounded-full mx-auto flex items-center justify-center text-5xl mb-4 bg-green-500/20 text-green-500';
+                els.quizResultIcon.innerHTML = '<i class="fas fa-check"></i>';
+                els.quizResultTitle.innerText = currentLang==='ur' ? 'کامیاب!' : 'Passed!';
+                els.quizResultTitle.className = 'text-3xl font-bold mb-2 text-green-500';
+            } else {
+                els.quizResultIcon.className = 'w-24 h-24 rounded-full mx-auto flex items-center justify-center text-5xl mb-4 bg-red-500/20 text-red-500';
+                els.quizResultIcon.innerHTML = '<i class="fas fa-times"></i>';
+                els.quizResultTitle.innerText = currentLang==='ur' ? 'ناکام' : 'Failed';
+                els.quizResultTitle.className = 'text-3xl font-bold mb-2 text-red-500';
+            }
+            
+            // Score DB me save karna
+            const course = COURSES.find(c => c.id === activeCourseId);
+            const less = course.modules.find(m => m.id === activeModuleId).lessons[activeLessonIndex];
+            userData.progress[course.id].scores[less.id] = percentage;
+            await saveProgressToDB();
+        }
+
+        els.btnFinishQuiz.addEventListener('click', () => {
+            quizState.active = false;
+            loadLesson(activeModuleId, activeLessonIndex);
+        });
+
+        // Quiz Review Mode (Galtian check karne ke liye)
+        els.btnReviewQuiz.addEventListener('click', () => {
+            els.quizReviewContainer.classList.remove('hide');
+            els.quizReviewContainer.innerHTML = `<h3 class="text-xl font-bold mb-4">${currentLang==='ur'?'جائزہ':'Review'}</h3>`;
+            
+            quizState.questions.forEach((q, i) => {
+                const userAnsIdx = quizState.answers[i];
+                const isCorrect = userAnsIdx === q.ans;
+                const icon = isCorrect ? '<i class="fas fa-check text-green-500"></i>' : '<i class="fas fa-times text-red-500"></i>';
+                
+                const div = document.createElement('div');
+                div.className = 'p-4 rounded-xl glass-card border border-white/5';
+                div.innerHTML = `
+                    <p class="font-bold mb-2">${i+1}. ${q.q[currentLang]}</p>
+                    <p class="text-sm opacity-80 mb-1 flex items-center gap-2">
+                        ${icon}
+                        ${currentLang==='ur'?'آپ کا جواب':'Your Answer'}: <span class="${isCorrect?'text-green-400':'text-red-400'}">${q.options[currentLang][userAnsIdx]}</span>
+                    </p>
+                    ${!isCorrect ? `<p class="text-sm text-green-400 mb-2">${currentLang==='ur'?'درست جواب':'Correct Answer'}: ${q.options[currentLang][q.ans]}</p>` : ''}
+                    <div class="mt-2 p-3 bg-white/5 rounded-lg text-sm border-l-2 border-primary">
+                        <i class="fas fa-info-circle text-primary mr-1 ml-1"></i> ${q.exp[currentLang]}
+                    </div>
+                `;
+                els.quizReviewContainer.appendChild(div);
+            });
+        });
+
+
+        // --- TEXT TO SPEECH (TTS) SYSTEM ---
+        const synth = window.speechSynthesis;
+        let currentUtterance = null;
+        let ttsActive = false;
+
+        function getVoices() {
+            return new Promise(resolve => {
+                let voices = synth.getVoices();
+                if (voices.length) {
+                    resolve(voices);
+                    return;
+                }
+                synth.onvoiceschanged = () => {
+                    voices = synth.getVoices();
+                    resolve(voices);
+                };
+            });
+        }
+
+        async function playTTS() {
+            if(ttsActive && synth.paused) {
+                synth.resume();
+                updateTTSUI('playing');
+                return;
+            }
+            if(synth.speaking) {
+                stopTTS();
+            }
+
+            const titleText = els.lessonTitle.innerText;
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = els.lessonContent.innerHTML;
+            const contentText = tempDiv.innerText || tempDiv.textContent;
+            const summaryText = els.lessonSummary.innerText;
+            
+            const fullText = `${titleText}. ${contentText}. ${currentLang==='ur'?'خلاصہ':'Summary'}: ${summaryText}`;
+
+            currentUtterance = new SpeechSynthesisUtterance(fullText);
+            
+            const voices = await getVoices();
+            let selectedVoice = null;
+            
+            if(currentLang === 'ur') {
+                selectedVoice = voices.find(v => v.lang.includes('ur') || v.name.toLowerCase().includes('urdu') || v.lang.includes('ar')); 
+            } else {
+                selectedVoice = voices.find(v => v.lang === 'en-US' || v.lang === 'en-GB');
+            }
+            
+            if(selectedVoice) currentUtterance.voice = selectedVoice;
+            currentUtterance.lang = currentLang === 'ur' ? 'ur-PK' : 'en-US';
+            currentUtterance.rate = currentLang === 'ur' ? 0.8 : 1.0; 
+
+            currentUtterance.onstart = () => { ttsActive = true; updateTTSUI('playing'); };
+            currentUtterance.onend = () => { stopTTS(); };
+            currentUtterance.onerror = (e) => { console.error("TTS Error", e); stopTTS(); };
+            
+            synth.speak(currentUtterance);
+        }
+
+        function pauseTTS() {
+            if(synth.speaking && !synth.paused) {
+                synth.pause();
+                updateTTSUI('paused');
+            }
+        }
+
+        function stopTTS() {
+            synth.cancel();
+            ttsActive = false;
+            updateTTSUI('stopped');
+        }
+
+        function updateTTSUI(state) {
+            if(state === 'playing') {
+                els.ttsPlay.classList.add('hide');
+                els.ttsPause.classList.remove('hide');
+                els.ttsIndicator.classList.remove('hide');
+            } else if (state === 'paused') {
+                els.ttsPlay.classList.remove('hide');
+                els.ttsPause.classList.add('hide');
+                els.ttsIndicator.classList.add('hide');
+            } else {
+                els.ttsPlay.classList.remove('hide');
+                els.ttsPause.classList.add('hide');
+                els.ttsIndicator.classList.add('hide');
+            }
+        }
+
+        els.ttsPlay.addEventListener('click', playTTS);
+        els.ttsPause.addEventListener('click', pauseTTS);
+        els.ttsStop.addEventListener('click', stopTTS);
+
+        window.addEventListener('beforeunload', stopTTS);
+
+        // Global objects ko window me set kar rahe hain taake onclick HTML se call ho sakein
+        window.navigate = navigate;
+
+    </script>
+</body>
+</html>
